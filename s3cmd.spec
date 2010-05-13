@@ -9,6 +9,7 @@ Source0:	http://dl.sourceforge.net/s3tools/%{name}-%{version}.tar.gz
 # Source0-md5:	0b8334ab4ffb1e09d6964861dc001e0f
 URL:		http://s3tools.org/s3cmd
 BuildRequires:	python
+BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 Requires:	python-modules
