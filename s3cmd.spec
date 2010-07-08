@@ -2,7 +2,7 @@
 Summary:	S3cmd tool for Amazon Simple Storage Service (S3)
 Name:		s3cmd
 Version:	0.9.9.91
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications
 Source0:	http://dl.sourceforge.net/s3tools/%{name}-%{version}.tar.gz
