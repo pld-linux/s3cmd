@@ -1,12 +1,12 @@
-#
 Summary:	S3cmd tool for Amazon Simple Storage Service (S3)
+Summary(pl.UTF-8):	Narzędzie s3cmd do obsługi Amazon Simple Storage Service (S3)
 Name:		s3cmd
-Version:	0.9.9.91
-Release:	2
+Version:	1.0.0
+Release:	1
 License:	GPL v2
 Group:		Applications
-Source0:	http://dl.sourceforge.net/s3tools/%{name}-%{version}.tar.gz
-# Source0-md5:	0b8334ab4ffb1e09d6964861dc001e0f
+Source0:	http://downloads.sourceforge.net/s3tools/%{name}-%{version}.tar.gz
+# Source0-md5:	e82f0246479015ce50a09d8d4ada8429
 URL:		http://s3tools.org/s3cmd
 BuildRequires:	python
 BuildRequires:	python-devel
@@ -21,6 +21,13 @@ S3cmd lets you copy files from/to Amazon S3 (Simple Storage Service)
 using a simple to use command line client. Supports rsync-like backup,
 GPG encryption, and more. Also supports management of Amazon's
 CloudFront content delivery network.
+
+%description -l pl.UTF-8
+s3cmd pozwala kopiować pliki z/do usługi Amazon S3 (Simple Storage
+Service) przy użyciu prostego w użyciu klienta działającego z linii
+poleceń. Obsługuje tworzenie kopii zapasowych w stylu rsynca,
+szyfrowanie GPG itp. Pozwala także na zarządzanie siecią udostępniania
+treści Amazon CloudFront.
 
 %prep
 %setup -q
@@ -37,7 +44,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %py_postclean
 
-rm -r $RPM_BUILD_ROOT%{_docdir}/packages/%{name}
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/packages/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -45,7 +52,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc README NEWS
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/s3cmd
 %{py_sitescriptdir}/S3
-%{py_sitescriptdir}/*.egg-info
-%{_mandir}/man1/*
+%{py_sitescriptdir}/s3cmd-%{version}-py*.egg-info
+%{_mandir}/man1/s3cmd.1*
