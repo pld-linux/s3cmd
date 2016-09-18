@@ -1,15 +1,16 @@
 Summary:	S3cmd tool for Amazon Simple Storage Service (S3)
 Summary(pl.UTF-8):	Narzędzie s3cmd do obsługi Amazon Simple Storage Service (S3)
 Name:		s3cmd
-Version:	1.0.1
+Version:	1.6.1
 Release:	1
 License:	GPL v2
 Group:		Applications
 Source0:	http://downloads.sourceforge.net/s3tools/%{name}-%{version}.tar.gz
-# Source0-md5:	dc62becc03a3e6100843611ebe2707c2
+# Source0-md5:	d7477e7000a98552932d23e279d69a11
+Patch0:		file-magic.patch
 URL:		http://s3tools.org/s3cmd
 BuildRequires:	python
-BuildRequires:	python-devel
+BuildRequires:	python-setuptools
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 Requires:	python-modules
@@ -32,26 +33,24 @@ treści Amazon CloudFront.
 %prep
 %setup -q
 
+%patch0 -p1
+
 %build
-%{__python} setup.py build
+%py_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__python} setup.py install \
-	--optimize=2 \
-	--root=$RPM_BUILD_ROOT
+%py_install
 
-%py_postclean
-
-%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/packages/%{name}
+rm -r $RPM_BUILD_ROOT%{_docdir}/packages
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README NEWS
+%doc README.md NEWS
 %attr(755,root,root) %{_bindir}/s3cmd
 %{py_sitescriptdir}/S3
 %{py_sitescriptdir}/s3cmd-%{version}-py*.egg-info

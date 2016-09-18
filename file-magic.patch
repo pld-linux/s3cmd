@@ -1,0 +1,19 @@
+diff -dur s3cmd-1.6.1.orig/s3cmd.egg-info/requires.txt s3cmd-1.6.1/s3cmd.egg-info/requires.txt
+--- s3cmd-1.6.1.orig/s3cmd.egg-info/requires.txt	2016-01-20 19:13:39.000000000 +0100
++++ s3cmd-1.6.1/s3cmd.egg-info/requires.txt	2016-09-18 20:28:31.186914202 +0200
+@@ -1,2 +1,2 @@
+ python-dateutil
+-python-magic
++file-magic
+diff -dur s3cmd-1.6.1.orig/setup.py s3cmd-1.6.1/setup.py
+--- s3cmd-1.6.1.orig/setup.py	2016-01-20 19:01:08.000000000 +0100
++++ s3cmd-1.6.1/setup.py	2016-09-18 20:28:54.377099309 +0200
+@@ -102,7 +102,7 @@
+         'Topic :: Utilities',
+     ],
+ 
+-    install_requires = ["python-dateutil", "python-magic"]
++    install_requires = ["python-dateutil", "file-magic"]
+     )
+ 
+ # vim:et:ts=4:sts=4:ai
