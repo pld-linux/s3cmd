@@ -1,0 +1,50 @@
+From 1a793a9153286e9327ef90895715edfbb116b447 Mon Sep 17 00:00:00 2001
+From: dogisgreat <github@bigly.dog>
+Date: Sun, 19 Jan 2025 22:42:00 -0500
+Subject: [PATCH] Fixes #1361 and #1027 - fix python 3 compat for configparser
+ (#1365)
+
+Trimmed to the readfp() part; readfp() was removed in Python 3.12.
+https://github.com/s3tools/s3cmd/commit/1a793a9153286e9327ef90895715edfbb116b447
+---
+diff --git a/S3/Config.py b/S3/Config.py
+index 58ecafc3..b2af74a1 100644
+--- a/S3/Config.py
++++ b/S3/Config.py
+@@ -73,6 +73,8 @@
+     # In python 3, unicode -> str, and str -> bytes
+     unicode = str
+ 
++PY3 = (sys.version_info >= (3, 0))
++
+ 
+ def is_bool_true(value):
+     """Check to see if a string is true, yes, on, or 1
+@@ -455,9 +457,11 @@ def aws_credential_file(self):
+                 config_string = fp.read()
+             try:
+                 try:
+-                    # readfp is replaced by read_file in python3,
+-                    # but so far readfp it is still available.
+-                    config.readfp(io.StringIO(config_string))
++                    buf = io.StringIO(config_string)
++                    if PY3:
++                      config.read_file(buf)
++                    else:
++                      config.readfp(buf)
+                 except MissingSectionHeaderError:
+                     # if header is missing, this could be deprecated
+                     # credentials file format as described here:
+@@ -465,7 +469,11 @@ def aws_credential_file(self):
+                     # then do the hacky-hack and add default header
+                     # to be able to read the file with PyConfigParser()
+                     config_string = u'[default]\n' + config_string
+-                    config.readfp(io.StringIO(config_string))
++                    buf = io.StringIO(config_string)
++                    if PY3:
++                      config.read_file(buf)
++                    else:
++                      config.readfp(buf)
+             except ParsingError as exc:
+                 raise ValueError(
+                     "Error reading aws_credential_file "

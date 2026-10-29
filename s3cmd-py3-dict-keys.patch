@@ -1,0 +1,31 @@
+From dae680c53ea6973ce88e531ae5a4a9dedc97123a Mon Sep 17 00:00:00 2001
+From: Florent Viard <florent@sodria.com>
+Date: Mon, 27 Jan 2025 03:26:00 +0100
+Subject: [PATCH] Fixes #1363 - Fixes 'dict_keys' not subscriptable for
+ remote2local with one local copy
+
+_set_local_filename can be called with copy_paris as remote_list,
+and "copy_pairs" is a normal dict and not a FileDict.
+So, in that case, copy_pairs.keys() will be a view in py3 and so not
+subscriptable.
+---
+ s3cmd | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/s3cmd b/s3cmd
+index 036138c7..e3b526fa 100755
+--- a/s3cmd
++++ b/s3cmd
+@@ -1411,10 +1411,10 @@ def cmd_sync_remote2local(args):
+             if not os.path.isdir(deunicodise(destination_base)):
+                 raise ParameterError("Destination is not an existing directory")
+         elif len(remote_list) == 1 and \
+-             source_args[0] == remote_list[remote_list.keys()[0]].get(u'object_uri_str', ''):
++             source_args[0] == remote_list[next(iter(remote_list.keys()))].get(u'object_uri_str', ''):
+             if os.path.isdir(deunicodise(destination_base)):
+                 raise ParameterError("Destination already exists and is a directory")
+-            remote_list[remote_list.keys()[0]]['local_filename'] = destination_base
++            remote_list[next(iter(remote_list.keys()))]['local_filename'] = destination_base
+             return
+ 
+         if destination_base[-1] != os.path.sep:

@@ -1,0 +1,49 @@
+From dd8908d782d27327527cf2acff800bddba4bc323 Mon Sep 17 00:00:00 2001
+From: Jessie Murray <jessie.murray@protonmail.com>
+Date: Sat, 6 Apr 2024 12:36:21 -0700
+Subject: [PATCH] cleanup: fixes regex escape warnings in S3Uri.py,
+ FileLists.py
+
+Mark two strings in S3Uri.py and one string in FileLists.py as
+literal regex strings to address "invalid escape sequence" syntax
+warnings.
+---
+ S3/FileLists.py | 2 +-
+ S3/S3Uri.py     | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/S3/FileLists.py b/S3/FileLists.py
+index 40d49c58..de2b88f2 100644
+--- a/S3/FileLists.py
++++ b/S3/FileLists.py
+@@ -522,7 +522,7 @@ def _get_filelist_remote(remote_uri, recursive = True):
+             uri_str = uri.uri()
+             ## Wildcards used in remote URI?
+             ## If yes we'll need a bucket listing...
+-            wildcard_split_result = re.split("\*|\?", uri_str, maxsplit=1)
++            wildcard_split_result = re.split(r"\*|\?", uri_str, maxsplit=1)
+ 
+             if len(wildcard_split_result) == 2:
+                 ## If wildcards found
+diff --git a/S3/S3Uri.py b/S3/S3Uri.py
+index f03101f4..b2f0c9f2 100644
+--- a/S3/S3Uri.py
++++ b/S3/S3Uri.py
+@@ -119,7 +119,7 @@ def httpurl_to_s3uri(http_url):
+ 
+         # Worst case scenario, we would like to be able to match something like
+         # my.website.com.s3-fips.dualstack.us-west-1.amazonaws.com.cn
+-        m = re.match("(.*\.)?s3(?:\-[^\.]*)?(?:\.dualstack)?(?:\.[^\.]*)?\.amazonaws\.com(?:\.cn)?$",
++        m = re.match(r"(.*\.)?s3(?:\-[^\.]*)?(?:\.dualstack)?(?:\.[^\.]*)?\.amazonaws\.com(?:\.cn)?$",
+                      hostname, re.IGNORECASE | re.UNICODE)
+         if not m:
+             raise ValueError("Unable to parse URL: %s" % http_url)
+@@ -167,7 +167,7 @@ def uri(self):
+ 
+ class S3UriFile(S3Uri):
+     type = "file"
+-    _re = re.compile("^(\w+://)?(.*)", re.UNICODE)
++    _re = re.compile(r"^(\w+://)?(.*)", re.UNICODE)
+     def __init__(self, string):
+         match = self._re.match(string)
+         groups = match.groups()
